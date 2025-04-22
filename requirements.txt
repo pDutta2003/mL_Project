@@ -1,0 +1,10 @@
+kagglehub
+pandas
+nltk
+scikit-learn
+tensorflow
+keras
+transformers
+datasets
+torch
+streamlit
