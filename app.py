@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from transformers import pipeline, BertTokenizerFast, BertForSequenceClassification
+from transformers import pipeline, BertTokenizerFast, BertForSequenceClassification, AutoTokenizer
 
 st.set_page_config(page_title="Fake News Detector", layout="wide")
 st.title("Fake News Detection Demo")
@@ -28,8 +28,13 @@ text_input = st.text_area("Article text:", height=200)
 
 if text_input:
     with st.spinner('Analyzing...'):
+        tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+        max_length = tokenizer.model_max_length
+        tokens = tokenizer(text_input, truncation=True, max_length=max_length, return_tensors="pt")
+        truncated_text = tokenizer.decode(tokens['input_ids'][0], skip_special_tokens=True)
+
         # Make prediction
-        result = classifier(text_input)
+        result = classifier(truncated_text)
         prediction = result[0]
         
         # Display results
